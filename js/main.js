@@ -2,37 +2,62 @@
    PORTFOLIO JAVASCRIPT
 ========================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
+
+    console.log("PORTFOLIO JS LOADED");
+
 
     /* =====================================
        DESCRIPTION DROPDOWNS
     ====================================== */
 
-    const descriptionButtons =
+    var descriptionButtons =
         document.querySelectorAll(".description-button");
 
-
-    descriptionButtons.forEach(button => {
-
-        button.addEventListener("click", () => {
-
-            const card = button.closest(".project-card");
-
-            const wasOpen = card.classList.contains("open");
+    console.log(
+        "Description buttons found:",
+        descriptionButtons.length
+    );
 
 
-            // Close every other project
+    descriptionButtons.forEach(function (button) {
+
+        button.addEventListener("click", function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            var card =
+                button.closest(".project-card");
+
+            if (!card) {
+                return;
+            }
+
+            var isOpen =
+                card.classList.contains("open");
+
+
+            /* Close all other project descriptions */
+
             document
                 .querySelectorAll(".project-card.open")
-                .forEach(openCard => {
+                .forEach(function (openCard) {
 
-                    openCard.classList.remove("open");
+                    if (openCard !== card) {
+                        openCard.classList.remove("open");
+                    }
 
                 });
 
 
-            // Open the selected project
-            if (!wasOpen) {
+            /* Open or close this description */
+
+            if (isOpen) {
+
+                card.classList.remove("open");
+
+            } else {
 
                 card.classList.add("open");
 
@@ -43,73 +68,427 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
+
+    /* =====================================
+       IMAGE CAROUSELS
+    ====================================== */
+
+    var carousels =
+        document.querySelectorAll(".carousel");
+
+    console.log(
+        "Carousels found:",
+        carousels.length
+    );
+
+
+    carousels.forEach(function (carousel) {
+
+        var track =
+            carousel.querySelector(".carousel-track");
+
+        var images =
+            carousel.querySelectorAll(".carousel-track img");
+
+        var previousButton =
+            carousel.querySelector(".carousel-prev");
+
+        var nextButton =
+            carousel.querySelector(".carousel-next");
+
+        var dotsContainer =
+            carousel.querySelector(".carousel-dots");
+
+
+        console.log(
+            "Carousel:",
+            images.length,
+            "images"
+        );
+
+
+        /* Make sure everything exists */
+
+        if (!track) {
+
+            console.error(
+                "Carousel is missing .carousel-track",
+                carousel
+            );
+
+            return;
+
+        }
+
+        if (!previousButton) {
+
+            console.error(
+                "Carousel is missing .carousel-prev",
+                carousel
+            );
+
+            return;
+
+        }
+
+        if (!nextButton) {
+
+            console.error(
+                "Carousel is missing .carousel-next",
+                carousel
+            );
+
+            return;
+
+        }
+
+
+        if (images.length === 0) {
+
+            console.error(
+                "Carousel has no images",
+                carousel
+            );
+
+            return;
+
+        }
+
+
+        var currentIndex = 0;
+
+
+
+        /* =================================
+           CREATE DOTS
+        ================================== */
+
+        if (dotsContainer) {
+
+            images.forEach(function (image, index) {
+
+                var dot =
+                    document.createElement("button");
+
+                dot.type = "button";
+
+                dot.classList.add("carousel-dot");
+
+                dot.setAttribute(
+                    "aria-label",
+                    "Go to image " + (index + 1)
+                );
+
+
+                if (index === 0) {
+
+                    dot.classList.add("active");
+
+                }
+
+
+                dot.addEventListener(
+                    "click",
+                    function (event) {
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+                        goToImage(index);
+
+                    }
+                );
+
+
+                dotsContainer.appendChild(dot);
+
+            });
+
+        }
+
+
+        var dots =
+            dotsContainer
+                ? dotsContainer.querySelectorAll(".carousel-dot")
+                : [];
+
+
+
+        /* =================================
+           MOVE TO IMAGE
+        ================================== */
+
+        function goToImage(index) {
+
+            if (images.length === 0) {
+                return;
+            }
+
+
+            currentIndex = index;
+
+
+            /*
+             * Move the track horizontally.
+             *
+             * Image 1 = 0%
+             * Image 2 = -100%
+             * Image 3 = -200%
+             */
+
+            track.style.transform =
+                "translateX(-" +
+                (currentIndex * 100) +
+                "%)";
+
+
+            /* Update dots */
+
+            dots.forEach(function (dot, dotIndex) {
+
+                if (dotIndex === currentIndex) {
+
+                    dot.classList.add("active");
+
+                } else {
+
+                    dot.classList.remove("active");
+
+                }
+
+            });
+
+        }
+
+
+
+        /* =================================
+           NEXT BUTTON
+        ================================== */
+
+        nextButton.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                console.log("NEXT CLICKED");
+
+
+                currentIndex =
+                    currentIndex + 1;
+
+
+                if (
+                    currentIndex >=
+                    images.length
+                ) {
+
+                    currentIndex = 0;
+
+                }
+
+
+                goToImage(currentIndex);
+
+            }
+        );
+
+
+
+        /* =================================
+           PREVIOUS BUTTON
+        ================================== */
+
+        previousButton.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                console.log("PREVIOUS CLICKED");
+
+
+                currentIndex =
+                    currentIndex - 1;
+
+
+                if (currentIndex < 0) {
+
+                    currentIndex =
+                        images.length - 1;
+
+                }
+
+
+                goToImage(currentIndex);
+
+            }
+        );
+
+
+
+        /* =================================
+           KEYBOARD CONTROLS
+        ================================== */
+
+        carousel.setAttribute(
+            "tabindex",
+            "0"
+        );
+
+
+        carousel.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key === "ArrowRight") {
+
+                    event.preventDefault();
+
+                    currentIndex =
+                        currentIndex + 1;
+
+
+                    if (
+                        currentIndex >=
+                        images.length
+                    ) {
+
+                        currentIndex = 0;
+
+                    }
+
+
+                    goToImage(currentIndex);
+
+                }
+
+
+                if (event.key === "ArrowLeft") {
+
+                    event.preventDefault();
+
+                    currentIndex =
+                        currentIndex - 1;
+
+
+                    if (currentIndex < 0) {
+
+                        currentIndex =
+                            images.length - 1;
+
+                    }
+
+
+                    goToImage(currentIndex);
+
+                }
+
+            }
+        );
+
+
+        /* Start at first image */
+
+        goToImage(0);
+
+    });
+
+
+
     /* =====================================
        SMOOTH NAVIGATION
     ====================================== */
 
-    const navLinks =
+    var navLinks =
         document.querySelectorAll(".nav-links a");
 
 
-    navLinks.forEach(link => {
+    navLinks.forEach(function (link) {
 
-        link.addEventListener("click", event => {
+        link.addEventListener(
+            "click",
+            function (event) {
 
-            const targetID =
-                link.getAttribute("href");
+                var targetID =
+                    link.getAttribute("href");
 
 
-            if (!targetID.startsWith("#")) {
-                return;
+                if (
+                    !targetID ||
+                    targetID.charAt(0) !== "#"
+                ) {
+
+                    return;
+
+                }
+
+
+                var target =
+                    document.querySelector(targetID);
+
+
+                if (!target) {
+
+                    return;
+
+                }
+
+
+                event.preventDefault();
+
+
+                var navbar =
+                    document.querySelector(".navbar");
+
+
+                var navbarHeight =
+                    navbar
+                    ? navbar.offsetHeight
+                    : 0;
+
+
+                var targetPosition =
+                    target.getBoundingClientRect().top
+                    + window.scrollY
+                    - navbarHeight
+                    - 10;
+
+
+                window.scrollTo({
+
+                    top: targetPosition,
+
+                    behavior: "smooth"
+
+                });
+
             }
-
-
-            const target =
-                document.querySelector(targetID);
-
-
-            if (!target) {
-                return;
-            }
-
-
-            event.preventDefault();
-
-
-            const navbarHeight =
-                document.querySelector(".navbar")
-                .offsetHeight;
-
-
-            const targetPosition =
-                target.getBoundingClientRect().top
-                + window.scrollY
-                - navbarHeight
-                - 10;
-
-
-            window.scrollTo({
-
-                top: targetPosition,
-
-                behavior: "smooth"
-
-            });
-
-        });
+        );
 
     });
+
 
 
     /* =====================================
        ACTIVE NAVIGATION
     ====================================== */
 
-    const sections =
-        document.querySelectorAll("main section[id]");
+    var sections =
+        document.querySelectorAll(
+            "main section[id]"
+        );
 
 
-    const observerOptions = {
+    var observerOptions = {
 
         root: null,
 
@@ -120,74 +499,105 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
 
-    const sectionObserver =
+    var sectionObserver =
         new IntersectionObserver(
-            entries => {
 
-                entries.forEach(entry => {
+            function (entries) {
 
-                    if (!entry.isIntersecting) {
-                        return;
-                    }
-
-
-                    const currentID =
-                        entry.target.getAttribute("id");
-
-
-                    navLinks.forEach(link => {
-
-                        link.classList.remove("active");
-
+                entries.forEach(
+                    function (entry) {
 
                         if (
-                            link.getAttribute("href")
-                            === `#${currentID}`
+                            !entry.isIntersecting
                         ) {
 
-                            link.classList.add("active");
+                            return;
 
                         }
 
-                    });
 
-                });
+                        var currentID =
+                            entry.target.getAttribute(
+                                "id"
+                            );
+
+
+                        navLinks.forEach(
+                            function (link) {
+
+                                link.classList.remove(
+                                    "active"
+                                );
+
+
+                                if (
+                                    link.getAttribute(
+                                        "href"
+                                    ) ===
+                                    "#" + currentID
+                                ) {
+
+                                    link.classList.add(
+                                        "active"
+                                    );
+
+                                }
+
+                            }
+                        );
+
+                    }
+                );
 
             },
 
             observerOptions
+
         );
 
 
-    sections.forEach(section => {
+    sections.forEach(function (section) {
 
         sectionObserver.observe(section);
 
     });
 
 
+
     /* =====================================
-       CLOSE DROPDOWNS WHEN CLICKING OUTSIDE
+       CLOSE DESCRIPTIONS WHEN CLICKING
+       OUTSIDE A PROJECT CARD
     ====================================== */
 
-    document.addEventListener("click", event => {
+    document.addEventListener(
+        "click",
+        function (event) {
 
-        const clickedInsideCard =
-            event.target.closest(".project-card");
+            var clickedInsideCard =
+                event.target.closest(
+                    ".project-card"
+                );
 
 
-        if (!clickedInsideCard) {
+            if (!clickedInsideCard) {
 
-            document
-                .querySelectorAll(".project-card.open")
-                .forEach(card => {
+                document
+                    .querySelectorAll(
+                        ".project-card.open"
+                    )
+                    .forEach(
+                        function (card) {
 
-                    card.classList.remove("open");
+                            card.classList.remove(
+                                "open"
+                            );
 
-                });
+                        }
+                    );
+
+            }
 
         }
-
-    });
+    );
 
 });
