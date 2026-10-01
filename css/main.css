@@ -613,7 +613,8 @@ box-shadow: var(--shadow-hover);
     background: #f3edf7;
 }
 
-/* The row containing all images */
+/* Horizontal row containing all slides */
+
 .carousel-track {
     display: flex;
     width: 100%;
@@ -621,22 +622,23 @@ box-shadow: var(--shadow-hover);
     transition: transform 0.4s ease;
 }
 
-/* Every image gets its own full-size slide */
+/* Each image gets one full carousel slide */
+
 .carousel-track img {
     flex: 0 0 100%;
     width: 100%;
+    min-width: 100%;
     height: 100%;
 
-    /* Keeps the entire image visible */
-    object-fit: contain;
-
-    /* Centers the image inside the slide */
-    object-position: center center;
-
     display: block;
-    margin: 0;
-    padding: 0;
+
+    object-fit: contain;
+    object-position: center;
+
+    padding: 25px;
+    box-sizing: border-box;
 }
+
 
 /* =========================================
    CAROUSEL ARROWS
@@ -644,6 +646,7 @@ box-shadow: var(--shadow-hover);
 
 .carousel-arrow {
     position: absolute;
+
     top: 50%;
     transform: translateY(-50%);
 
@@ -655,11 +658,11 @@ box-shadow: var(--shadow-hover);
     border: none;
     border-radius: 50%;
 
-    background: rgba(75, 54, 101, 0.85);
-    color: #ffffff;
+    background: rgba(255, 255, 255, 0.92);
+    color: #4b356b;
 
     font-family: Arial, sans-serif;
-    font-size: 30px;
+    font-size: 28px;
     line-height: 1;
 
     display: flex;
@@ -668,23 +671,33 @@ box-shadow: var(--shadow-hover);
 
     cursor: pointer;
 
+    box-shadow: 0 4px 12px rgba(68, 45, 82, 0.12);
+
     transition:
+        transform 0.2s ease,
         background 0.2s ease,
-        transform 0.2s ease;
+        box-shadow 0.2s ease;
 }
 
 .carousel-arrow:hover {
-    background: rgba(75, 54, 101, 1);
-    transform: translateY(-50%) scale(1.08);
+    background: white;
+
+    box-shadow:
+        0 6px 16px rgba(68, 45, 82, 0.18);
+
+    transform:
+        translateY(-50%)
+        scale(1.08);
 }
 
 .carousel-prev {
-    left: 16px;
+    left: 15px;
 }
 
 .carousel-next {
-    right: 16px;
+    right: 15px;
 }
+
 
 /* =========================================
    CAROUSEL DOTS
@@ -693,7 +706,7 @@ box-shadow: var(--shadow-hover);
 .carousel-dots {
     position: absolute;
 
-    bottom: 16px;
+    bottom: 14px;
     left: 50%;
 
     transform: translateX(-50%);
@@ -708,179 +721,67 @@ box-shadow: var(--shadow-hover);
 
     padding: 6px 10px;
 
-    border-radius: 20px;
+    background: rgba(75, 53, 107, 0.45);
 
-    background: rgba(75, 54, 101, 0.45);
+    border-radius: 20px;
 }
 
 .carousel-dot {
-    width: 10px;
-    height: 10px;
+    width: 9px;
+    height: 9px;
 
     padding: 0;
 
     border: none;
     border-radius: 50%;
 
-    background: rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.65);
 
     cursor: pointer;
 
     transition:
-        background 0.2s ease,
-        transform 0.2s ease;
+        transform 0.2s ease,
+        background 0.2s ease;
 }
 
 .carousel-dot:hover {
-    transform: scale(1.15);
+    transform: scale(1.2);
 }
 
 .carousel-dot.active {
-    background: #ffffff;
+    background: white;
     transform: scale(1.15);
 }
 
-/* =========================================
-CAROUSEL ARROWS
-========================================= */
-
-.carousel-arrow {
-position: absolute;
-
-
-top: 50%;
-
-transform: translateY(-50%);
-
-z-index: 20;
-
-width: 42px;
-height: 42px;
-
-padding: 0;
-
-border: none;
-
-border-radius: 50%;
-
-display: flex;
-
-align-items: center;
-justify-content: center;
-
-background: rgba(255, 255, 255, 0.92);
-
-color: var(--purple-dark);
-
-font-size: 28px;
-
-line-height: 1;
-
-cursor: pointer;
-
-box-shadow:
-    0 4px 15px rgba(40, 25, 60, 0.15);
-
-opacity: 0;
-
-transition:
-    opacity 0.25s ease,
-    transform 0.25s ease,
-    background 0.25s ease;
-
-
-}
-
-.carousel:hover .carousel-arrow {
-opacity: 1;
-}
-
-.carousel-arrow:hover {
-background: var(--white);
-}
-
-.carousel-prev {
-left: 15px;
-}
-
-.carousel-next {
-right: 15px;
-}
-
-.carousel-prev:hover {
-transform:
-translateY(-50%)
-translateX(-3px);
-}
-
-.carousel-next:hover {
-transform:
-translateY(-50%)
-translateX(3px);
-}
 
 /* =========================================
-CAROUSEL DOTS
+   MOBILE CAROUSEL
 ========================================= */
 
-.carousel-dots {
-position: absolute;
+@media (max-width: 750px) {
 
+    .carousel {
+        height: 400px;
+    }
 
-left: 50%;
-bottom: 12px;
+    .carousel-track img {
+        padding: 20px;
+    }
 
-transform: translateX(-50%);
+    .carousel-arrow {
+        width: 36px;
+        height: 36px;
 
-z-index: 20;
+        font-size: 24px;
+    }
 
-display: flex;
+    .carousel-prev {
+        left: 10px;
+    }
 
-align-items: center;
-
-gap: 7px;
-
-padding: 6px 10px;
-
-border-radius: 20px;
-
-background: rgba(40, 25, 55, 0.38);
-
-backdrop-filter: blur(5px);
-
--webkit-backdrop-filter: blur(5px);
-
-
-}
-
-.carousel-dot {
-width: 7px;
-height: 7px;
-
-
-padding: 0;
-
-border: none;
-
-border-radius: 50%;
-
-background: rgba(255, 255, 255, 0.55);
-
-cursor: pointer;
-
-transition:
-    transform 0.2s ease,
-    background 0.2s ease;
-
-
-}
-
-.carousel-dot.active {
-background: var(--white);
-
-
-transform: scale(1.35);
-
+    .carousel-next {
+        right: 10px;
+    }
 
 }
 
