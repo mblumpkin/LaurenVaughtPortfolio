@@ -609,67 +609,143 @@ box-shadow: var(--shadow-hover);
 }
 
 /* =========================================
-CAROUSEL
+   PROJECT IMAGE CAROUSEL
 ========================================= */
 
-.project-image {
-position: relative;
-
-
-width: 100%;
-
-overflow: hidden;
-
-background: var(--lavender);
-
-
-}
-
 .carousel {
-position: relative;
-
-
-width: 100%;
-
-overflow: hidden;
-
-
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #f3edf7;
 }
 
-/* Horizontal row of images */
-
+/* The row containing all images */
 .carousel-track {
-display: flex;
-
-
-width: 100%;
-
-transform: translateX(0);
-
-transition: transform 0.4s ease;
-
-will-change: transform;
-
-
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.4s ease;
 }
 
-/* Each image fills one card width */
-
+/* Every image gets its own full-size slide */
 .carousel-track img {
-flex: 0 0 100%;
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
 
+    /* Keeps the entire image visible */
+    object-fit: contain;
 
-width: 100%;
+    /* Centers the image inside the slide */
+    object-position: center center;
 
-min-width: 100%;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
 
-aspect-ratio: 4 / 3;
+/* =========================================
+   CAROUSEL ARROWS
+========================================= */
 
-object-fit: cover;
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 
-display: block;
+    z-index: 10;
 
+    width: 42px;
+    height: 42px;
 
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(75, 54, 101, 0.85);
+    color: #ffffff;
+
+    font-family: Arial, sans-serif;
+    font-size: 30px;
+    line-height: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.carousel-arrow:hover {
+    background: rgba(75, 54, 101, 1);
+    transform: translateY(-50%) scale(1.08);
+}
+
+.carousel-prev {
+    left: 16px;
+}
+
+.carousel-next {
+    right: 16px;
+}
+
+/* =========================================
+   CAROUSEL DOTS
+========================================= */
+
+.carousel-dots {
+    position: absolute;
+
+    bottom: 16px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    z-index: 10;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    background: rgba(75, 54, 101, 0.45);
+}
+
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+
+    padding: 0;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.55);
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.carousel-dot:hover {
+    transform: scale(1.15);
+}
+
+.carousel-dot.active {
+    background: #ffffff;
+    transform: scale(1.15);
 }
 
 /* =========================================
